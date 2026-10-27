@@ -1,0 +1,36 @@
+{
+  "name": "webhook-agora-bot",
+  "version": "1.0.0",
+  "description": "Serviço de webhook e bot para integração com o Ágora em TypeScript",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "tsx --test test/receptor.test.ts",
+    "simular": "tsx scripts/simular.ts",
+    "zip": "tsx scripts/zipar.ts"
+  },
+  "keywords": [
+    "agora",
+    "webhook",
+    "bot",
+    "typescript",
+    "fslab"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7",
+    "archiver": "^7.0.1",
+    "@types/archiver": "^6.0.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

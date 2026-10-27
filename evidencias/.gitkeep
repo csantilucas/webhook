@@ -1,0 +1,6 @@
+# Pasta para as capturas de tela obrigatórias da entrega:
+# 1. Painel de Integrações do Ágora (bot criado e webhook ativo)
+# 2. curl https://SEU-NOME.fslab.dev/saude a partir do computador pessoal
+# 3. Conversa no Ágora com os comandos (!ajuda, !time, !eventos) e respostas do bot
+# 4. Teste curl com assinatura forjada (401) e evento duplicado (202 seguido de 200)
+# 5. Telas dos endpoints /eventos e /falhas no ar
