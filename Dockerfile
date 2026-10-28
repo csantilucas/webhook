@@ -15,7 +15,7 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=4100
+ENV PORT=4000
 
 COPY package*.json ./
 RUN npm ci --omit=dev
@@ -23,7 +23,7 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 
 # Expõe a porta configurada
-EXPOSE 4100
+EXPOSE 4000
 
 # Executa o servidor compilado
 CMD ["node", "dist/server.js"]

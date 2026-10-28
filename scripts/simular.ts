@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { createHmac } from 'node:crypto';
 
-const PORT = process.env.PORT || '4100';
+const PORT = process.env.PORT || '4000';
 const URL_BASE = `http://localhost:${PORT}`;
 const SECRET = process.env.AGORA_WEBHOOK_SECRET || 'whsec_teste_local_1234567890abcdef';
 

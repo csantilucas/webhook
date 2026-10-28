@@ -2,8 +2,8 @@
 
 **Disciplina:** Web Services (CST em ADS · IFRO · 2026/2)  
 **Tópico:** 5 · Webhooks  
-**URL Pública do Serviço:** `https://lucas.fslab.dev` *(ajuste para o subdomínio criado na cloud)*  
-**Integrantes:** Lucas *(ou adicione o nome dos integrantes da equipe)*  
+**URL Pública do Serviço:** `https://lucas-bot.app.fslab.dev`  
+**Integrantes:** Lucas  
 
 ---
 
@@ -83,7 +83,7 @@ webhook/
    ```
    Preencha:
    ```env
-   PORT=4100
+   PORT=4000
    AGORA_WEBHOOK_SECRET=whsec_copiado_do_agora
    AGORA_BOT_TOKEN=bot_copiado_do_agora
    AGORA_URL=https://api.agora.fslab.dev
@@ -98,14 +98,13 @@ webhook/
 ## 🌐 Configuração na Cloud FSLab e no Ágora
 
 1. **Na Cloud FSLab (`cloud.fslab.dev`)**:
-   - Vá em **Endereços** -> **Novo Endereço**.
-   - Crie `SEU-NOME.fslab.dev` apontando para a sua VM na porta `4100`.
-   - Teste no seu computador: `curl https://SEU-NOME.fslab.dev/saude`.
+   - Endereço criado: `lucas-bot.app.fslab.dev` apontando para a sua VM na porta `4000`.
+   - Teste no seu computador: `curl https://lucas-bot.app.fslab.dev/saude`.
 2. **No Ágora (`agora.fslab.dev`)**:
    - Vá em **Integrações** -> **Novo bot**.
    - Nome: `bot-lucas`.
    - Conversa: selecione uma conversa de teste (sem cifragem).
-   - Endereço do serviço: `https://SEU-NOME.fslab.dev/webhooks/agora`.
+   - Endereço do serviço: `https://lucas-bot.app.fslab.dev/webhooks/agora`.
    - Copie o **Token do bot** e o **Secret do webhook** exibidos e salve no `.env` da VM.
 
 ---
@@ -114,16 +113,16 @@ webhook/
 
 ```bash
 # 1. Conferir saúde
-curl -i https://SEU-NOME.fslab.dev/saude
+curl -i https://lucas-bot.app.fslab.dev/saude
 
 # 2. Testar assinatura inválida (deve retornar 401)
-curl -i -X POST https://SEU-NOME.fslab.dev/webhooks/agora \
+curl -i -X POST https://lucas-bot.app.fslab.dev/webhooks/agora \
   -H "Content-Type: application/json" \
   -H "X-Agora-Signature: 0000000000000000000000000000000000000000000000000000000000000000" \
   -d '{"evento":"message.created","dados":{"id":"t1","text":"teste"}}'
 
 # 3. Ver histórico de eventos
-curl https://SEU-NOME.fslab.dev/eventos
+curl https://lucas-bot.app.fslab.dev/eventos
 ```
 
 ---

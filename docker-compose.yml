@@ -4,8 +4,6 @@ services:
     container_name: agora-webhook-bot
     restart: unless-stopped
     ports:
-      - "${PORT:-4100}:${PORT:-4100}"
+      - "4000:4000"
     env_file:
       - .env
-    environment:
-      - PORT=${PORT:-4100}

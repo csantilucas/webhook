@@ -5,7 +5,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 // ==========================================
 // Configurações e Variáveis de Ambiente
 // ==========================================
-export const PORT = Number(process.env.PORT) || 4100;
+export const PORT = Number(process.env.PORT) || 4000;
 export const SECRET = process.env.AGORA_WEBHOOK_SECRET || '';
 export const BOT_TOKEN = process.env.AGORA_BOT_TOKEN || '';
 export const AGORA_URL = (process.env.AGORA_URL || 'https://api.agora.fslab.dev').replace(/\/+$/, '');
