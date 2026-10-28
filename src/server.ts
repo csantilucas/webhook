@@ -86,15 +86,19 @@ export async function enviarMensagem(conversationId: string, texto: string, tent
 // ==========================================
 export const app = express();
 
-// Rota de saúde para a cloud do FSLab
-app.get('/saude', (_req: Request, res: Response) => {
+// Rotas de saúde (/saude e /health)
+const responderSaude = (_req: Request, res: Response) => {
   res.status(200).json({
     ok: true,
+    status: 'healthy',
     uptimeSegundos: Math.floor(process.uptime()),
     totalEventos: eventos.length,
     totalFalhas: falhas.length,
   });
-});
+};
+
+app.get('/saude', responderSaude);
+app.get('/health', responderSaude);
 
 // Lista os últimos eventos autênticos recebidos
 app.get('/eventos', (_req: Request, res: Response) => {

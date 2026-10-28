@@ -145,13 +145,18 @@ test('6. Comando !time é aceito e processado com 202', async () => {
   }
 });
 
-test('7. Consulta /saude retorna 200 com ok: true', async () => {
+test('7. Consulta /saude e /health retornam 200 com ok: true', async () => {
   const { server, url } = await iniciarServidor();
   try {
-    const res = await fetch(`${url}/saude`);
-    assert.equal(res.status, 200);
-    const dados = (await res.json()) as { ok: boolean };
-    assert.equal(dados.ok, true);
+    const resSaude = await fetch(`${url}/saude`);
+    assert.equal(resSaude.status, 200);
+    const dadosSaude = (await resSaude.json()) as { ok: boolean };
+    assert.equal(dadosSaude.ok, true);
+
+    const resHealth = await fetch(`${url}/health`);
+    assert.equal(resHealth.status, 200);
+    const dadosHealth = (await resHealth.json()) as { ok: boolean };
+    assert.equal(dadosHealth.ok, true);
   } finally {
     server.close();
   }
