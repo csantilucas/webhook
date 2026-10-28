@@ -49,6 +49,8 @@ export async function enviarMensagem(conversationId: string, texto: string, tent
     return;
   }
 
+  console.log(`[Bot] Enviando resposta para conversa ${conversationId}: "${texto.replace(/\n/g, ' ')}"`);
+
   try {
     const res = await fetch(`${AGORA_URL}/bot/messages`, {
       method: 'POST',
@@ -64,10 +66,11 @@ export async function enviarMensagem(conversationId: string, texto: string, tent
       const msgErro = await res.text().catch(() => '');
       throw new Error(`HTTP ${res.status}: ${msgErro}`);
     }
+
+    console.log(`[Bot] ✅ Resposta publicada com sucesso na conversa ${conversationId}!`);
   } catch (erro) {
-    console.warn(`[Bot] Falha no envio (tentativa ${tentativa}/3): ${(erro as Error).message}`);
+    console.warn(`[Bot] ⚠️ Falha no envio (tentativa ${tentativa}/3): ${(erro as Error).message}`);
     if (tentativa < 3) {
-      // Retenta com espera exponencial (1s, 2s)
       await new Promise((r) => setTimeout(r, tentativa * 1000));
       return enviarMensagem(conversationId, texto, tentativa + 1);
     } else {
@@ -116,6 +119,7 @@ app.post('/webhooks/agora', express.raw({ type: '*/*', limit: '1mb' }), (req: Re
 
   // 1. Validação de autenticidade (HMAC)
   if (!validarAssinatura(req.get('x-agora-signature'), corpoBruto)) {
+    console.warn(`[Webhook] ❌ Assinatura inválida recebida!`);
     return res.status(401).json({ erro: 'assinatura inválida' });
   }
 
@@ -124,28 +128,37 @@ app.post('/webhooks/agora', express.raw({ type: '*/*', limit: '1mb' }), (req: Re
   try {
     payload = JSON.parse(corpoBruto.toString('utf8'));
   } catch {
+    console.warn('[Webhook] ❌ JSON malformado recebido!');
     return res.status(400).json({ erro: 'JSON inválido' });
   }
+
+  // Log completo do payload recebido
+  console.log('----------------------------------------------------');
+  console.log(`[Webhook Recebido: ${payload.evento}]`);
+  console.log(JSON.stringify(payload, null, 2));
+  console.log('----------------------------------------------------');
 
   // 3. Idempotência: chave composta por evento + id da mensagem
   const chaveDeduplicacao = `${payload.evento}:${payload.dados?.id || ''}`;
   if (vistos.has(chaveDeduplicacao)) {
+    console.log(`[Webhook] ℹ️ Evento duplicado descartado: ${chaveDeduplicacao}`);
     return res.status(200).json({ duplicado: true });
   }
   vistos.add(chaveDeduplicacao);
 
   // 4. Grava o evento na memória
+  const textoExtraido = payload.dados?.text || payload.dados?.content || payload.dados?.body || null;
   eventos.unshift({
     id: payload.dados?.id || `evt_${Date.now()}`,
     evento: payload.evento,
-    texto: payload.dados?.text,
+    texto: textoExtraido,
     recebidoEm: new Date().toISOString(),
   });
   if (eventos.length > 50) eventos.pop();
 
   // 5. Processa comando do bot em segundo plano (sem travar a resposta)
-  if (payload.evento === 'message.created' && typeof payload.dados?.text === 'string') {
-    const textoMensagem = payload.dados.text.trim();
+  if (payload.evento === 'message.created' && typeof textoExtraido === 'string') {
+    const textoMensagem = textoExtraido.trim();
 
     // Regra anti-laço: só responde se começar com '!' e não for mensagem do próprio bot
     if (textoMensagem.startsWith('!') && !textoMensagem.startsWith('🤖')) {
